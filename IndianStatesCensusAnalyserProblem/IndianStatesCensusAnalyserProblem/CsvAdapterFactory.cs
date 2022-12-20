@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IndianStatesCensusAnalyserProblem.DTO;
 
 namespace IndianStatesCensusAnalyserProblem
 {
     public class CsvAdapterFactory
     {
-        public string[] LoadCsvData(CountryCheck.Country country, string csvFilePath, string headers)
+        public Dictionary<string, CensusDTO> LoadCsvData(CensusAnalyser.Country country, string path, string csvHeaders)
         {
             try
             {
                 switch (country)
                 {
-                    case (CountryCheck.Country.INDIA):
+                    case (CensusAnalyser.Country.INDIA):
                         {
-                            return new CensusAnalyser().LoadCountryCsv(csvFilePath, headers);
+                            return new IndianStateCensusAdapter().LoadCensusData(path, csvHeaders);
                         }
                     default:
                         {
-                            throw new CensusAnalyserException(CensusAnalyserException.ExceptionType.NO_SUCH_COUNTRY, "NO SUCH COUNTRY");
+                            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_COUNTRY, "No such country present");
                         }
                 }
             }
-            catch (CensusAnalyserException ex)
+            catch (StateCensusAnalyserException ex)
             {
                 throw ex;
             }

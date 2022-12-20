@@ -1,23 +1,25 @@
 using IndianStatesCensusAnalyserProblem;
+using IndianStatesCensusAnalyserProblem.DTO;
 
 namespace IndianStateCensusTessing
 {
     [TestClass]
     public class UnitTest1
     {
-        IStateCensusCSVOperations censusAnalyser;
-        CsvAdapterFactory censusAdapter;
+        CsvAdapterFactory objCsvAdapter = default;
+        Dictionary<string, CensusDTO> allStateRecord;
 
-        string censusFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\IndianStateCensusInfo.csv";
-        string invalidCsvFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\InvalidCensusFile.csv";
-        string invalidFileTypePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\InvalidCensusFileType.txt";
-        string invalidDelimiterFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\IndianStateCensusInfo_InvalidDelimiter.csv";
-        string invalidHeaderFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\IndianStateCensusInfo_InvalidHeader.csv";
+        string censusFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\Utility\IndianStateCensusInfo.csv";
+        string invalidCsvFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\Utility\IndianStateCensusInfo2.csv";
+        string invalidFileTypePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\Utility\InvalidCensusFileType.txt";
+        string invalidDelimiterFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\Utility\IndianStateCensusInfo_InvalidDelimiter.csv";
+        string invalidHeaderFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\Utility\IndianStateCensusInfo_InvalidHeader.csv";
 
         [TestInitialize]
         public void SetUp()
         {
-            censusAdapter = new CsvAdapterFactory();
+            objCsvAdapter = new CsvAdapterFactory();
+            allStateRecord = new Dictionary<string, CensusDTO>();
         }
 
         /// <summary>
@@ -26,9 +28,9 @@ namespace IndianStateCensusTessing
         [TestMethod]
         public void GivenStateCensusCSV_ReturnCountOfFields()
         {
-            int expected = 29;
-            string[] result = censusAdapter.LoadCsvData(CountryCheck.Country.INDIA, censusFilePath, "State,Population,Increase,Area,Density");
-            int actual = result.Length;
+            int expected = 28;
+            allStateRecord = objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, censusFilePath,"State,Population,Area,Density");
+            int actual = allStateRecord.Count;
             Assert.AreEqual(expected, actual);
         }
 
@@ -40,11 +42,11 @@ namespace IndianStateCensusTessing
         {
             try
             {
-                censusAdapter.LoadCsvData(CountryCheck.Country.INDIA, invalidCsvFilePath, "State,Population,Increase,Area,Density");
+                objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, invalidCsvFilePath, "State,Population,Area,Density");
             }
-            catch (CensusAnalyserException ex)
+            catch (StateCensusAnalyserException ex)
             {
-                Assert.AreEqual(ex.Message, "File Not Found!");
+                Assert.AreEqual(ex.Message, "File not found");
             }
         }
 
@@ -56,11 +58,11 @@ namespace IndianStateCensusTessing
         {
             try
             {
-                censusAdapter.LoadCsvData(CountryCheck.Country.INDIA, invalidFileTypePath, "State,Population,Increase,Area,Density");
+                objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, invalidFileTypePath, "State,Population,Area,Density");
             }
-            catch (CensusAnalyserException ex)
+            catch (StateCensusAnalyserException ex)
             {
-                Assert.AreEqual(ex.Message, "Invalid Extension");
+                Assert.AreEqual(ex.Message, "Invalid file extension");
             }
         }
 
@@ -72,9 +74,9 @@ namespace IndianStateCensusTessing
         {
             try
             {
-                censusAdapter.LoadCsvData(CountryCheck.Country.INDIA, invalidDelimiterFilePath, "State,Population,Increase,Area,Density");
+                objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, invalidDelimiterFilePath, "State,Population,Area,Density");
             }
-            catch (CensusAnalyserException ex)
+            catch (StateCensusAnalyserException ex)
             {
                 Assert.AreEqual(ex.Message, "Invalid Delimiter");
             }
@@ -88,11 +90,11 @@ namespace IndianStateCensusTessing
         {
             try
             {
-                censusAdapter.LoadCsvData(CountryCheck.Country.INDIA, invalidHeaderFilePath, "State,Population,Increase,Area,Density");
+                objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, invalidHeaderFilePath, "State,Population,Area,Density");
             }
-            catch (CensusAnalyserException ex)
+            catch (StateCensusAnalyserException ex)
             {
-                Assert.AreEqual(ex.Message, "Invalid Header");
+                Assert.AreEqual(ex.Message, "Invalid file headers");
             }
         }
     }
