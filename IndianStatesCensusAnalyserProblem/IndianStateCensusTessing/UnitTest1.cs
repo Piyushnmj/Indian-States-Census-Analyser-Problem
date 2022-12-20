@@ -15,6 +15,9 @@ namespace IndianStateCensusTessing
         string invalidDelimiterFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\Utility\IndianStateCensusInfo_InvalidDelimiter.csv";
         string invalidHeaderFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\Utility\IndianStateCensusInfo_InvalidHeader.csv";
 
+        string stateCodesFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\Utility\StateCodes.csv";
+        string stateCodesInvalidDelimiterFilePath = @"F:\Bridgelabz Codin\Indian-States-Census-Analyser-Problem\IndianStatesCensusAnalyserProblem\IndianStatesCensusAnalyserProblem\Utility\StateCodesInvalidDelimiter.csv";
+
         [TestInitialize]
         public void SetUp()
         {
@@ -87,6 +90,82 @@ namespace IndianStateCensusTessing
         /// </summary>
         [TestMethod]
         public void TestMethodToCheckInvalidHeader()
+        {
+            try
+            {
+                objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, invalidHeaderFilePath, "State,Population,Area,Density");
+            }
+            catch (StateCensusAnalyserException ex)
+            {
+                Assert.AreEqual(ex.Message, "Invalid file headers");
+            }
+        }
+
+        /// <summary>
+        /// TC2.1 - Count Number of Records
+        /// </summary>
+        [TestMethod]
+        public void GivenStateCodes_ReturnCountOfFields()
+        {
+            int expected = 28;
+            allStateRecord = objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, stateCodesFilePath, "SerialNumber,Tin,StateName,StateCode");
+            int actual = allStateRecord.Count;
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// TC2.2 - Check if File Exists or not
+        /// </summary>
+        [TestMethod]
+        public void TestMethodToCheckInvalidStateCodeFiles()
+        {
+            try
+            {
+                objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, invalidCsvFilePath, "SerialNumber,Tin,StateName,StateCode");
+            }
+            catch (StateCensusAnalyserException ex)
+            {
+                Assert.AreEqual(ex.Message, "File not found");
+            }
+        }
+
+        /// <summary>
+        /// TC2.3 - Check for correct Extension
+        /// </summary>
+        [TestMethod]
+        public void TestMethodToCheckInvalidStateCodeFileExtension()
+        {
+            try
+            {
+                objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, invalidFileTypePath, "SerialNumber,Tin,StateName,StateCode");
+            }
+            catch (StateCensusAnalyserException ex)
+            {
+                Assert.AreEqual(ex.Message, "Invalid file extension");
+            }
+        }
+
+        /// <summary>
+        /// TC2.4 - Check for proper Delimiter
+        /// </summary>
+        [TestMethod]
+        public void TestMethodToCheckInvalidDelimiterInStateCodeFile()
+        {
+            try
+            {
+                objCsvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, stateCodesInvalidDelimiterFilePath, "SerialNumber,Tin,StateName,StateCode");
+            }
+            catch (StateCensusAnalyserException ex)
+            {
+                Assert.AreEqual(ex.Message, "Invalid Delimiter");
+            }
+        }
+
+        /// <summary>
+        /// TC2.5 - Check for incorrect header
+        /// </summary>
+        [TestMethod]
+        public void TestMethodToCheckInvalidHeaderInStateCodeFile()
         {
             try
             {
